@@ -3,6 +3,7 @@ package com.android.awsdemo;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
@@ -15,6 +16,8 @@ import com.amazonaws.mobileconnectors.iot.AWSIotMqttManager;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
 import com.amazonaws.regions.Regions;
 
+import org.jetbrains.annotations.NotNull;
+
 public class AwsService extends Service {
 
     private static final String COGNITO_POOL_ID = "eu-central-1:6888e504-258e-4a26-b81f-5f1529450ce2";
@@ -23,11 +26,28 @@ public class AwsService extends Service {
     private static final String LOG_TAG = "AwsService";
     private CognitoCachingCredentialsProvider credentialsProvider;
     private AWSIotMqttManager mqttRemoteAwsClient;
+    private final IBinder mBinder = new LocalBinder();
+
+    @NotNull
+    public boolean shouldConnect() {
+        return true;
+    }
+
+    public void sendMessage() {
+        mqttRemoteAwsClient.publishData("l/room/1/c2;;1".getBytes(), "remote_amitjaiswal", AWSIotMqttQos.QOS0);
+    }
+
+    public class LocalBinder extends Binder {
+        public AwsService getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return AwsService.this;
+        }
+    }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mBinder;
     }
 
     @Override
