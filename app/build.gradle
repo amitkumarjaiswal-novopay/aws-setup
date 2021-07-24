@@ -13,7 +13,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -47,4 +47,7 @@ dependencies {
     def aws_version = '2.16.+'
     implementation "com.amazonaws:aws-android-sdk-iot:$aws_version"
     implementation "com.amazonaws:aws-android-sdk-mobile-client:$aws_version"
+
+
+    implementation "androidx.multidex:multidex:2.0.1"
 }
